@@ -10,7 +10,7 @@ package ascensor;
  */
 public class Ascensor {
     
-    private int[] b;  //Sol·licituds d'aturada interna
+    private int[] b;  //Sol·licituds d'aturada interna 
     private int[] c; //Sol·licituds d'aturada externes
     private int a; //pis actual de l'ascensor
     private boolean d;
