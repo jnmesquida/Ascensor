@@ -10,7 +10,13 @@
  */
 package ascensor;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  *
@@ -18,21 +24,55 @@ import java.awt.Dimension;
  */
 public class Finestra extends javax.swing.JFrame {
     
-    private int numPisos = 8;
+    private int numPisos = 10;
     private Ascensor ascensor;
-    private int pisActual;
     private Dimension tamanyFinestra;
+    private final int TIMER_DELAY = 5;
+    private int tamanyPis = 70;
 
     /** Creates new form Finestra */
     public Finestra() {
         initComponents();
-        this.tamanyFinestra = new Dimension(400, numPisos * 100);
-        setPreferredSize(tamanyFinestra);
-        pack();
+        this.setTitle("Ascensor");
+        this.tamanyFinestra = new Dimension(400, numPisos * tamanyPis);
+        this.setPreferredSize(tamanyFinestra);       
         this.PanelPrincipal.setSize(tamanyFinestra);
         this.ascensor = new Ascensor(numPisos);  //cream un nou ascensor
-        this.pisActual = ascensor.getA();
+        PanelPrincipal.add(ascensor);
+        ascensor.setBackground(Color.RED);
+        ascensor.setBounds(100,this.PanelPrincipal.getHeight()-tamanyPis,30,50);
+        pack();
     }
+    
+    /*
+     * Timer que implementa es moviment de ascensor
+     */
+    Timer pujaPis = new Timer (TIMER_DELAY, new ActionListener () 
+    {       
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (ascensor.getLocation().y >= ((numPisos - (ascensor.getA()+1)) * tamanyPis)){
+                ascensor.setLocation(100,ascensor.getLocation().y-1);
+            }else{
+                pujaPis.stop();
+                ascensor.setA(ascensor.getA()+1);
+            }
+        }
+    });
+    
+    Timer baixaPis = new Timer (TIMER_DELAY, new ActionListener () 
+    {       
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (ascensor.getLocation().y <= ((numPisos - (ascensor.getA()-1)) * tamanyPis)){
+                ascensor.setLocation(100,ascensor.getLocation().y+1);
+            }else{
+                baixaPis.stop();
+                ascensor.setA(ascensor.getA()-1);
+            }
+        }
+    });
+    
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -44,39 +84,45 @@ public class Finestra extends javax.swing.JFrame {
     private void initComponents() {
 
         PanelPrincipal = new javax.swing.JPanel();
-        cabina = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        cabina.setBackground(new java.awt.Color(255, 51, 51));
-        cabina.setPreferredSize(new java.awt.Dimension(35, 50));
+        PanelPrincipal.setBackground(new java.awt.Color(204, 204, 204));
 
-        org.jdesktop.layout.GroupLayout cabinaLayout = new org.jdesktop.layout.GroupLayout(cabina);
-        cabina.setLayout(cabinaLayout);
-        cabinaLayout.setHorizontalGroup(
-            cabinaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 35, Short.MAX_VALUE)
-        );
-        cabinaLayout.setVerticalGroup(
-            cabinaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 50, Short.MAX_VALUE)
-        );
+        jButton1.setText("Pujar");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
+        jButton2.setText("Baixar");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout PanelPrincipalLayout = new org.jdesktop.layout.GroupLayout(PanelPrincipal);
         PanelPrincipal.setLayout(PanelPrincipalLayout);
         PanelPrincipalLayout.setHorizontalGroup(
             PanelPrincipalLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(PanelPrincipalLayout.createSequentialGroup()
-                .add(81, 81, 81)
-                .add(cabina, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addContainerGap(318, Short.MAX_VALUE)
+                .add(PanelPrincipalLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jButton1)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jButton2)))
         );
         PanelPrincipalLayout.setVerticalGroup(
             PanelPrincipalLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, PanelPrincipalLayout.createSequentialGroup()
-                .addContainerGap(250, Short.MAX_VALUE)
-                .add(cabina, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(PanelPrincipalLayout.createSequentialGroup()
+                .add(jButton1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jButton2)
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -92,6 +138,14 @@ public class Finestra extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    pujaPis.start();
+}//GEN-LAST:event_jButton1MouseClicked
+
+private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    baixaPis.start();
+}//GEN-LAST:event_jButton2MouseClicked
 
     
     /**
@@ -135,6 +189,7 @@ public class Finestra extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelPrincipal;
-    private javax.swing.JPanel cabina;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables
 }

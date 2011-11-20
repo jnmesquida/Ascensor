@@ -4,11 +4,14 @@
  */
 package ascensor;
 
+import java.awt.Graphics;
+import javax.swing.JPanel;
+
 /**
  *
  * @author joan
  */
-public class Ascensor {
+public class Ascensor extends JPanel{
     
     private int[] b;  //Sol·licituds d'aturada interna 
     private int[] c; //Sol·licituds d'aturada externes
@@ -18,7 +21,7 @@ public class Ascensor {
     public Ascensor(int pisos) {
         this.b = new int[pisos];
         this.c = new int[pisos];
-        this.a = 0;
+        this.a = 1;
         this.d = true;
     }
 
@@ -56,6 +59,5 @@ public class Ascensor {
     
     public void mou(int pis){
         this.a = pis;
-    }   
-    
+    }    
 }
