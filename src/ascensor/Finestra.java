@@ -10,11 +10,15 @@
  */
 package ascensor;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -29,18 +33,38 @@ public class Finestra extends javax.swing.JFrame {
     private Dimension tamanyFinestra;
     private final int TIMER_DELAY = 5;
     private int tamanyPis = 70;
+    private JPanel[] pisos = new JPanel[numPisos];
+    
+    public void creaPisos(){
+        for (int i = 0; i < numPisos; i++){
+            pisos[i] = new JPanel();
+            pisos[i].setBounds(this.PanelPrincipal.getLocation().x,
+                    this.PanelPrincipal.getHeight() - tamanyPis - 20 - (i * tamanyPis),
+                    300,
+                    tamanyPis);
+            pisos[i].setBorder(BorderFactory.createLineBorder(Color.black));
+            pisos[i].setBackground(null);
+            pisos[i].setLayout(new GridLayout());
+            pisos[i].add(new JButton("Pujar"));
+            pisos[i].add(new JButton("Baixar"));
+            this.PanelPrincipal.add(pisos[i], BorderLayout.EAST);
+        }
+    }
+    
+ 
 
     /** Creates new form Finestra */
-    public Finestra() {
+    public Finestra(){
         initComponents();
         this.setTitle("Ascensor");
         this.tamanyFinestra = new Dimension(400, numPisos * tamanyPis);
-        this.setPreferredSize(tamanyFinestra);       
-        this.PanelPrincipal.setSize(tamanyFinestra);
+        this.setPreferredSize(tamanyFinestra);
+        this.PanelPrincipal.setSize(tamanyFinestra);        
         this.ascensor = new Ascensor(numPisos);  //cream un nou ascensor
         PanelPrincipal.add(ascensor);
         ascensor.setBackground(Color.RED);
         ascensor.setBounds(100,this.PanelPrincipal.getHeight()-tamanyPis,30,50);
+        creaPisos();
         pack();
     }
     
